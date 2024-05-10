@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">  
+    <title>Language Translator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Font Awesome CDN Link for Icons -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'homepage.css' %}">
+  </head>
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <div class="text-input">
+          <textarea spellcheck="false" class="from-text" id="textInput" placeholder="Enter text"></textarea>
+          <textarea spellcheck="false" readonly disabled class="to-text" id="textOutput" placeholder="Translation"></textarea>
+        </div>
+        <ul class="controls">
+          <li class="row from">
+            <div class="icons">
+                <button type="button" id="textInputVoice">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                </button>
+              <i id="from" class="fas fa-copy"></i>
+            </div>
+
+            <select name="textInputOptions" id="textInputOptions">
+                {% for i in option %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+            </select>
+          </li>
+          {% comment %} <li class="exchange"><i class="fas fa-exchange-alt"></i></li> {% endcomment %}
+          <li class="row to">
+
+            <select name="textOutputOptions" id="textOutputOptions">
+                {% for i in option %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+            </select>
+
+            <div class="icons">
+              <i id="to" class="fas fa-volume-up"></i>
+              <i id="to" class="fas fa-copy"></i>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <button>Translate Text</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#textTranslateButton').click(function() {
+                var text = $('#textInput').val();
+                var src = $('#textInputOptions').val();
+                var dest = $('#textOutputOptions').val();
+                $.ajax({
+                    url: '{% url "get_new_value" %}',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: {
+                        'text': text,
+                        'src': src,
+                        'dest': dest
+                    },
+                    success: function(data) {
+                        $('#textOutput').val(data.new_value);
+                    }
+                });
+            });
+    
+            $('#Speak').click(function() {
+                var speech = $('#textOutput').val();
+                var src = $('#speak-in').val();
+                var dest = $('#speak-to').val();
+                $.ajax({
+                    url: '{% url "translate_speech" %}',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: {
+                        'speech': speech,
+                        'dest': dest,
+                        'src': src
+                    },
+                    success: function(data) {
+                        $('#SpokenText').val(data.Spoken_text);
+                        $('#translatedText').val(data.translated_text);
+                    }
+                });
+            });
+    
+            $('#voiceFrom').click(function() {
+                var src = $('#speak-in').val();
+                var text = $('#SpokenText').val();
+                $.ajax({
+                    url: '{% url "get_voice" %}',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: {
+                        'text': text,
+                        'src': src
+                    },
+                    success: function(data) {
+                        var audio = new Audio(data.audio_path);
+                        audio.play();
+                    }
+                });
+            });
+            $('#voiceTo').click(function() {
+                var src = $('#speak-to').val();
+                var text = $('#translatedText').val();
+                $.ajax({
+                    url: '{% url "get_voice" %}',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: {
+                        'text': text,
+                        'src': src
+                    },
+                    success: function(data) {
+                        var audio = new Audio(data.audio_path);
+                        audio.play();
+                    }
+                });
+            });
+            $('#textInputVoice').click(function() {
+                var src = $('#textInputOptions').val();
+                var text = $('#textInput').val();
+                $.ajax({
+                    url: '{% url "get_voice" %}',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: {
+                        'text': text,
+                        'src': src
+                    },
+                    success: function(data) {
+                        var audio = new Audio(data.audio_path);
+                        audio.play();
+                    }
+                });
+            });
+            $('#textOutputVoice').click(function() {
+                var src = $('#textOutputOptions').val();
+                var text = $('#textOutput').val();
+                $.ajax({
+                    url: '{% url "get_voice" %}',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: {
+                        'text': text,
+                        'src': src
+                    },
+                    success: function(data) {
+                        var audio = new Audio(data.audio_path);
+                        audio.play();
+                    }
+                });
+            });
+    
+        });
+    </script>
+
+  </body>
+</html>

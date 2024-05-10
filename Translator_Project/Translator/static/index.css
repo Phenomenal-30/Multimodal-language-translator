@@ -1,0 +1,94 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #5285d2e2;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+}
+
+#head{
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+
+}
+
+#div1 {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+}
+#div2 {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 20px 0px #3b7bdb;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input, form button {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+form button {
+    background-color: #3b7bdb;
+    color: #fff;
+    cursor: pointer;
+}
+
+button{
+    margin: 5px;
+}
+
+form button:hover {
+    background-color: #3b7bdb;
+}
+
+#speak-in{
+    margin: 5px;
+}
+#speak-to{
+    margin: 5px;
+}
+
+select::-webkit-scrollbar-thumb{
+    background: #999;
+    border-radius: 8px;
+    border-right: 2px solid #ffffff;
+}
+
+select::-webkit-scrollbar-thumb:hover{
+    background: #666;
+}
+
+select::-webkit-scrollbar-track{
+    background: #fff;
+}
+
+select::-webkit-scrollbar{
+width: 8px;
+}
+
+select{
+color: #333;
+border: none;
+outline: none;
+font-size: 18px;
+background: none;
+padding-left: 5px;
+}
+

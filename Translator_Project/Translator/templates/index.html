@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+
+    </script>
+    {% comment %} <link rel="stylesheet" href="./index.css"> {% endcomment %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
+    <title>test page</title>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <h1 id="head">Language Translator</h1>
+
+    <div id="div1">
+    <form action="#" method="post" id="form1">
+        {% csrf_token %}
+
+        <label for="name">Enter Text:</label>
+        <br>
+        <input type="text" name="textInput" id="textInput" placeholder="Enter Text">
+    
+        <button type="button" id="textInputVoice">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+        
+
+        <br>
+
+        <label for="textInputOptions">Select Input Language:</label>
+        <br>
+        <select name="textInputOptions" id="textInputOptions">
+            {% for i in option %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+        
+        <br>
+        
+
+        {% comment %} <button type="submit">Translate</button> {% endcomment %}
+
+        <br>
+
+        <label for="textOutput">Translated text:</label>
+        <input type="text" name="textOutput" id="textOutput" placeholder="Translated text" readonly>
+           
+        <button type="button" id="textOutputVoice">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+        
+
+        {% comment %} <label for="textOutput">Translated text:</label>
+        <input type="text" name="textOutput" id="textOutput" placeholder="Translated text" readonly> {% endcomment %}
+
+        <br>
+        
+        <label for="textOutputOptions">Select Output Language:</label>
+        <br>
+        <select name="textOutputOptions" id="textOutputOptions">
+            {% for i in option %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+    
+        <br>
+        
+        <br>
+        <button type="button" id="textTranslateButton">Translate</button>
+    </form>
+    </div>
+
+    <br>
+    
+    <div id="div2">
+    <form action="#" method="post" id="form2">
+        {% csrf_token %}
+
+        <label for="speak-in">Speech Input Language:</label>
+        <select name="speak-in" id="speak-in">
+            {% for i in option %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="speak-to">Speech Output Language:</label>
+        <select name="speak-to" id="speak-to">
+            {% for i in option %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+        {% comment %} <label for="Speech-in">Spoken Text: </label>
+        <input type="text" name="speech-in" id="speech-in" readonly> {% endcomment %}
+        
+        <button type="button" id="Speak">Speak</button>
+        
+        <label for="SpokenText">Spoken Text: </label>
+        <input type="text" name="SpokenText" id="SpokenText" readonly>
+
+        <button type="button" id="voiceFrom">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+
+        <label for="translatedText">Translated Text: </label>
+        <input type="text" name="translatedText" id="translatedText" readonly>
+
+        <button type="button" id="voiceTo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+
+        
+    </form>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#textTranslateButton').click(function() {
+            var text = $('#textInput').val();
+            var src = $('#textInputOptions').val();
+            var dest = $('#textOutputOptions').val();
+            $.ajax({
+                url: '{% url "get_new_value" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    'text': text,
+                    'src': src,
+                    'dest': dest
+                },
+                success: function(data) {
+                    $('#textOutput').val(data.new_value);
+                }
+            });
+        });
+
+        $('#Speak').click(function() {
+            var speech = $('#textOutput').val();
+            var src = $('#speak-in').val();
+            var dest = $('#speak-to').val();
+            $.ajax({
+                url: '{% url "translate_speech" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    'speech': speech,
+                    'dest': dest,
+                    'src': src
+                },
+                success: function(data) {
+                    $('#SpokenText').val(data.Spoken_text);
+                    $('#translatedText').val(data.translated_text);
+                }
+            });
+        });
+
+        $('#voiceFrom').click(function() {
+            var src = $('#speak-in').val();
+            var text = $('#SpokenText').val();
+            $.ajax({
+                url: '{% url "get_voice" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    'text': text,
+                    'src': src
+                },
+                success: function(data) {
+                    var audio = new Audio(data.audio_path);
+                    audio.play();
+                }
+            });
+        });
+        $('#voiceTo').click(function() {
+            var src = $('#speak-to').val();
+            var text = $('#translatedText').val();
+            $.ajax({
+                url: '{% url "get_voice" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    'text': text,
+                    'src': src
+                },
+                success: function(data) {
+                    var audio = new Audio(data.audio_path);
+                    audio.play();
+                }
+            });
+        });
+        $('#textInputVoice').click(function() {
+            var src = $('#textInputOptions').val();
+            var text = $('#textInput').val();
+            $.ajax({
+                url: '{% url "get_voice" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    'text': text,
+                    'src': src
+                },
+                success: function(data) {
+                    var audio = new Audio(data.audio_path);
+                    audio.play();
+                }
+            });
+        });
+        $('#textOutputVoice').click(function() {
+            var src = $('#textOutputOptions').val();
+            var text = $('#textOutput').val();
+            $.ajax({
+                url: '{% url "get_voice" %}',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    'text': text,
+                    'src': src
+                },
+                success: function(data) {
+                    var audio = new Audio(data.audio_path);
+                    audio.play();
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>
